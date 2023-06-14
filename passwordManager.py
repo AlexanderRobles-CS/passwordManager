@@ -2,10 +2,20 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
 import base64
+import os
+
+def generate_key():
+    key = Fernet.generate_key()
+    with open("key.key", "wb") as file:
+        file.write(key)
 
 def loadKey():
-    with open("key.key", "rb") as file:                                    # rb = read bytes
+    if not os.path.isfile("key.key"):
+        generate_key()
+
+    with open("key.key", "rb") as file:
         key = file.read()
+
     return key
 
 def deriveKey(key, masterPassword, salt):                                  # Derive key from master password
@@ -36,20 +46,26 @@ encodedKey = base64.urlsafe_b64encode(fernetKey)                          # Enco
 fernetKey = Fernet(encodedKey)                                            # Create Fernet object
 
 def viewPassword():
-    with open("passwords.txt", "r") as f:                                 # r = read
+    with open("passwords.txt", "r") as f:                                                         # Read passwords.txt file
+        print("\n")
+
         for line in f.readlines():
             data = line.rstrip()
-            user, password = data.split(" | ")
-            decryptedPassword = decryptPassword(password, fernetKey)
-            print("User:", user, ", Password:", decryptedPassword)
+            decryptedData = decryptPassword(data, fernetKey)
+            username, account_name, password = decryptedData.split(" | ")
+            print("Account:", account_name, ", Username:", username, ", Password:", password)
+
+        print("\n")
 
 def addPassword():                                                       # Add new password
-    accountName = input("Account name: ")
-    accountPassword = input("Password: ")
-    encryptedPassword = encryptPassword(accountPassword, fernetKey)
+    account_name = input("Account name: ")
+    username = input("Username: ")
+    account_password = input("Password: ")
     
-    with open("passwords.txt", "a") as f:                                # a = append
-        f.write(accountName + " | " + encryptedPassword + "\n")
+    encryptedData = encryptPassword(username + " | " + account_name + " | " + account_password, fernetKey)
+    
+    with open("passwords.txt", "a") as f:
+        f.write(encryptedData + "\n")
 
 while True:
     mode = input("Would you like to add a new password or view an existing one? (add/view), Press q to quit. ").lower()
