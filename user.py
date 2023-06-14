@@ -15,7 +15,7 @@ class User:
 
                 print("\n")
         except:
-            print("\nNo passwords to view.\n")
+            print("No passwords to view.\n")
 
     def addPassword(self, encryption):                                                       # Add new password
         account_name = input("Account name: ")
