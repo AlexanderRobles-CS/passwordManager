@@ -20,3 +20,20 @@ class User:
         
         with open("passwords.txt", "a") as f:
             f.write(encryptedData + "\n")
+
+    def main(self, user, encryption):
+        while True:
+            mode = input("Would you like to add a new password or view an existing one? (add/view), Press q to quit. ").lower()
+
+            if mode == "q":
+                break
+
+            if mode == "add":
+                user.addPassword(encryption)
+
+            elif mode == "view":
+                user.viewPassword(encryption)
+
+            else:
+                print("Invalid mode selected.")
+                continue

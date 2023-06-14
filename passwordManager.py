@@ -10,18 +10,4 @@ if __name__ == "__main__":
 
     user = User()
 
-    while True:
-        mode = input("Would you like to add a new password or view an existing one? (add/view), Press q to quit. ").lower()
-
-        if mode == "q":
-            break
-
-        if mode == "add":
-            user.addPassword(encryption)
-
-        elif mode == "view":
-            user.viewPassword(encryption)
-
-        else:
-            print("Invalid mode selected.")
-            continue
+    user.main(user, encryption)
