@@ -45,9 +45,8 @@ class Encryption:
         return decryptedPassword.decode()
     
     def deriveFernetKey(self, masterPassword):
-        salt = b'some_salt_value'
 
-        fernetKey = self.deriveKey(self.key, masterPassword, salt)                          # Derive key from master password
+        fernetKey = self.deriveKey(self.key, masterPassword, self.salt)                          # Derive key from master password
         encodedKey = base64.urlsafe_b64encode(fernetKey)                                    # Encode key to base64
         fernetKey = Fernet(encodedKey)                                                      # Create Fernet object
 
